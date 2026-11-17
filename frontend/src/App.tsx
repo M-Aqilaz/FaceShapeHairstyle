@@ -96,7 +96,7 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:pt-14">
+      <main className="mx-auto max-w-5xl px-4 pb-16 pt-5 sm:pb-20 sm:pt-8">
         {error && step === "upload" && (
           <div role="alert" className="mx-auto mb-5 max-w-xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             <strong className="font-semibold">Klasifikasi gagal. </strong>
@@ -108,9 +108,9 @@ export default function App() {
 
         {step === "upload" && (
           <div>
-            <h1 className="mb-1 text-center text-2xl font-bold text-slate-900">Ambil Foto Wajah</h1>
-            <p className="mb-6 text-center text-sm text-slate-600">
-              Gunakan kamera untuk mengambil foto wajah langsung, atau unggah gambar yang sudah ada.
+            <h1 className="mb-1 text-center text-xl font-bold text-slate-900 sm:text-2xl">Ambil Foto Wajah</h1>
+            <p className="mb-5 text-center text-[13px] text-slate-600 sm:text-sm">
+              Ambil foto langsung lewat kamera, atau unggah gambar dari perangkat.
             </p>
             <Uploader onSubmit={start} disabled={false} autoCamera={autoCamera} initialFile={file} />
           </div>
@@ -125,7 +125,7 @@ export default function App() {
         {step === "result" && result && preview && <Result result={result} preview={preview} onReset={reset} />}
       </main>
 
-      <footer className="border-t border-sky-100 bg-white/50 px-4 py-6 backdrop-blur">
+      <footer className="hidden border-t border-sky-100 bg-white/50 px-4 py-6 backdrop-blur sm:block">
         <p className="mx-auto max-w-5xl text-center text-xs text-slate-500">
           {APP.name} · Frontend React + TypeScript · Klasifikasi bentuk wajah (oval, round, square, heart, oblong) dengan HOG + machine learning.
         </p>

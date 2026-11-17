@@ -73,10 +73,10 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
 
   return (
     <div className="mx-auto max-w-xl">
-      <div className="glass p-5 sm:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="font-semibold text-slate-900">Masukkan foto wajah</h2>
-          <span className="mono">{file ? "1 foto dipilih" : "belum ada foto"}</span>
+      <div className="glass p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-2">
+          <h2 className="whitespace-nowrap text-base font-semibold text-slate-900 sm:text-lg">Foto wajah</h2>
+          <span className="mono mt-1 shrink-0 whitespace-nowrap">{file ? "1 dipilih" : "belum ada"}</span>
         </div>
 
         {!preview ? (
@@ -84,17 +84,19 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
             {/* Metode utama: kamera */}
             <button
               onClick={() => setCameraTry((n) => n + 1)}
-              className="mt-4 grid w-full place-items-center gap-1 rounded-xl border border-cyan-300 bg-gradient-to-br from-sky-600 to-cyan-500 px-6 py-9 text-center text-white shadow-lg shadow-sky-500/30 transition hover:brightness-110"
+              className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl border border-cyan-300 bg-gradient-to-br from-sky-700 to-cyan-600 px-4 py-4 text-center text-white shadow-lg shadow-sky-500/30 transition hover:brightness-110 sm:mt-4 sm:grid sm:place-items-center sm:gap-1 sm:px-6 sm:py-8"
             >
-              <svg viewBox="0 0 24 24" className="h-11 w-11" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="h-9 w-9 shrink-0 sm:h-11 sm:w-11" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" strokeLinejoin="round" />
                 <circle cx="12" cy="13" r="3.5" />
               </svg>
-              <span className="mt-1 font-semibold">Ambil Foto Wajah</span>
-              <span className="text-xs text-white/80">Buka kamera perangkat · metode utama</span>
+              <span className="text-left sm:text-center">
+                <span className="block font-semibold">Ambil Foto Wajah</span>
+                <span className="block text-[11px] text-white/85">Buka kamera perangkat · metode utama</span>
+              </span>
             </button>
 
-            <div className="my-4 flex items-center gap-3">
+            <div className="my-3 flex items-center gap-2 sm:my-4 sm:gap-3">
               <span className="h-px flex-1 bg-sky-200" />
               <span className="mono">atau</span>
               <span className="h-px flex-1 bg-sky-200" />
@@ -111,7 +113,7 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-              className={`flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed px-4 py-4 text-center transition ${
+              className={`flex min-h-12 cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-dashed px-3 py-3 text-center transition ${
                 dragging ? "border-cyan-500 bg-cyan-50/70" : "border-sky-300 bg-white/50 hover:border-cyan-400"
               }`}
             >
@@ -119,11 +121,11 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
                 <path d="M12 16V4m0 0 4 4m-4-4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" />
               </svg>
-              <span className="text-sm text-slate-700">
+              <span className="min-w-0 text-[13px] text-slate-700 sm:text-sm">
                 atau <span className="font-medium text-sky-800">unggah gambar</span> dari perangkat
               </span>
             </div>
-            <p className="mono mt-2 text-center">jpeg · png · maks 8 mb</p>
+            <p className="mono mt-1.5 text-center">jpeg · png · maks 8 mb</p>
           </>
         ) : (
           <div className="mt-4">
@@ -166,12 +168,13 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
         <button
           onClick={submit}
           disabled={!file || disabled}
-          className="mt-4 w-full rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-sky-500/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+          className="mt-4 min-h-12 w-full rounded-xl bg-gradient-to-r from-sky-700 to-cyan-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-sky-500/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none sm:text-base"
         >
           {disabled ? "Memproses…" : "Klasifikasi Sekarang"}
         </button>
 
-        <ul className="mt-4 space-y-1.5 text-xs text-slate-600">
+        {/* Panduan sudah ada di halaman beranda — di HP disembunyikan agar panel ringkas */}
+        <ul className="mt-4 hidden space-y-1.5 text-xs text-slate-600 sm:block">
           {TIPS.map((t) => (
             <li key={t} className="flex gap-2">
               <span className="text-cyan-600">•</span>
@@ -188,13 +191,25 @@ export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }
             accept(f);
             setCameraTry(0);
           }}
+          onFallback={() => {
+            setCameraTry(0);
+            inputRef.current?.click();
+          }}
         />
       )}
     </div>
   );
 }
 
-function CameraModal({ onClose, onCapture }: { onClose: () => void; onCapture: (f: File) => void }) {
+function CameraModal({
+  onClose,
+  onCapture,
+  onFallback,
+}: {
+  onClose: () => void;
+  onCapture: (f: File) => void;
+  onFallback: () => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -259,36 +274,48 @@ function CameraModal({ onClose, onCapture }: { onClose: () => void; onCapture: (
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Ambil foto dengan kamera">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-4 shadow-2xl">
-        <div className="flex items-center justify-between">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/60 backdrop-blur-sm sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Ambil foto dengan kamera"
+    >
+      <div className="flex h-[100dvh] w-full max-w-lg flex-col bg-white p-4 shadow-2xl sm:h-auto sm:rounded-2xl [@media(max-height:420px)]:h-auto [@media(max-height:420px)]:w-fit [@media(max-height:420px)]:max-w-[92vw] [@media(max-height:420px)]:rounded-2xl [@media(max-height:420px)]:p-2.5">
+        <div className="flex shrink-0 items-center justify-between">
           <h3 className="font-semibold text-slate-900">Ambil foto wajah</h3>
-          <button onClick={onClose} aria-label="Tutup kamera" className="grid h-8 w-8 place-items-center rounded-full text-slate-500 hover:bg-slate-100">
+          <button onClick={onClose} aria-label="Tutup kamera" className="-mr-1 grid h-10 w-10 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-slate-100">
             ✕
           </button>
         </div>
-        <div className="relative mt-3 overflow-hidden rounded-xl bg-slate-900">
-          <video ref={videoRef} autoPlay playsInline muted className="mx-auto max-h-[60vh] w-full object-cover" />
+        {err ? (
+          <div className="mt-3 grid flex-1 place-items-center rounded-xl border border-slate-200 bg-slate-50 px-4 py-8 text-center">
+            <svg viewBox="0 0 24 24" className="h-9 w-9 text-slate-400" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" strokeLinejoin="round" />
+              <circle cx="12" cy="13" r="3.5" />
+              <path d="M3 3l18 18" strokeLinecap="round" />
+            </svg>
+            <p className="mt-2 text-sm font-medium text-slate-700">Kamera tidak aktif</p>
+          </div>
+        ) : (
+          <div className="relative mt-3 min-h-0 flex-1 overflow-hidden rounded-xl bg-slate-900 sm:aspect-[4/3] sm:flex-none [@media(max-height:420px)]:h-[calc(100dvh-140px)] [@media(max-height:420px)]:w-auto [@media(max-height:420px)]:flex-none [@media(max-height:420px)]:aspect-[3/4] [@media(max-height:420px)]:self-center">
+            <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover" />
 
-          {/* Panduan posisi kepala gaya verifikasi muka bank: area luar digelapkan, oval jadi "lubang" */}
-          {!err && (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden="true">
-              <div className="relative aspect-[3/4] h-[64%] rounded-[50%] border-2 border-cyan-300 shadow-[0_0_0_9999px_rgba(2,6,23,0.64)]" />
-              <div className="absolute aspect-[3/4] h-[74%] animate-pulse rounded-[50%] border-2 border-dashed border-white/60" />
+            {/* Panduan posisi kepala gaya verifikasi muka bank: area luar digelapkan, oval jadi "lubang" */}
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div className="absolute inset-0 m-auto aspect-[3/4] h-[60%] rounded-[50%] border-2 border-cyan-300 shadow-[0_0_0_9999px_rgba(2,6,23,0.64)]" />
+              <div className="absolute inset-0 m-auto aspect-[3/4] h-[70%] animate-pulse rounded-[50%] border border-dashed border-white/40" />
             </div>
-          )}
 
-          {!err && (
-            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-2">
+            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-2 [@media(max-height:420px)]:hidden">
               <span className="rounded-full bg-slate-900/70 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur">
                 Posisikan wajah di dalam oval
               </span>
             </div>
-          )}
-        </div>
+          </div>
+        )}
         {!err && (
-          <p className="mt-2 text-center text-xs text-slate-500">
-            Wajah menghadap kamera, mata tidak tertutup, pencahayaan cukup.
+          <p className="mt-2 shrink-0 text-center text-[11px] leading-tight text-slate-500 sm:text-xs [@media(max-height:420px)]:hidden">
+            Wajah menghadap kamera, pencahayaan cukup.
           </p>
         )}
         {err && (
@@ -296,17 +323,26 @@ function CameraModal({ onClose, onCapture }: { onClose: () => void; onCapture: (
             {err}
           </p>
         )}
-        <div className="mt-3 flex gap-2">
-          <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600">
+        <div className="mt-3 flex shrink-0 gap-3">
+          <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium whitespace-nowrap text-slate-600">
             Batal
           </button>
-          <button
-            onClick={capture}
-            disabled={!ready || !!err}
-            className="flex-1 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
-          >
-            Ambil Foto
-          </button>
+          {err ? (
+            <button
+              onClick={onFallback}
+              className="flex-1 rounded-xl bg-gradient-to-r from-sky-700 to-cyan-600 px-4 py-2.5 text-sm font-medium whitespace-nowrap text-white"
+            >
+              Pilih Gambar
+            </button>
+          ) : (
+            <button
+              onClick={capture}
+              disabled={!ready}
+              className="flex-1 rounded-xl bg-gradient-to-r from-sky-700 to-cyan-600 px-4 py-2.5 text-sm font-medium whitespace-nowrap text-white disabled:opacity-40"
+            >
+              Ambil Foto
+            </button>
+          )}
         </div>
       </div>
     </div>

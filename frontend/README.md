@@ -32,6 +32,12 @@ src/
 Alur: tombol "Mulai Klasifikasi" langsung membuka kamera; unggah file tetap tersedia di bawahnya.
 Bila kamera tidak tersedia/ditolak, pengguna diarahkan ke unggah gambar.
 
+## Responsif
+
+Diuji tanpa overflow horizontal di 320, 390, 568x320 (landscape), 768, 1024, 1440.
+Modal kamera: full-screen portrait di HP (`h-[100dvh]`, video `flex-1`), 4:3 di desktop,
+dan kartu ringkas portrait otomatis bila tinggi viewport < 420px (landscape HP).
+
 ## Kontrak API yang diharapkan
 
 `POST /api/analysis/predict` — `multipart/form-data`, field `file`.
