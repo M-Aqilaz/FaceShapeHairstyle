@@ -1,19 +1,11 @@
 import type { FaceShape, FaceShapeInfo, Recommendation } from "./types";
 
 export const APP = {
-  name: "FaceShape AI",
+  name: "Hairmory",
   tagline: "Kenali bentuk wajahmu, temukan gaya rambut yang pas.",
   intro:
-    "FaceShape AI menganalisis foto wajah Anda menggunakan ekstraksi fitur HOG dan model klasifikasi machine learning, lalu merekomendasikan gaya rambut yang paling cocok untuk bentuk wajah tersebut.",
-  about:
-    "Bentuk wajah memengaruhi keseimbangan proporsi rambut terhadap rahang dan dahi. Dengan mengetahui bentuk wajah, pemilihan gaya rambut jadi lebih terarah — bukan sekadar tren.",
+    "Hairmory menganalisis foto wajah Anda menggunakan ekstraksi fitur HOG dan model klasifikasi machine learning, lalu merekomendasikan gaya rambut yang paling cocok untuk bentuk wajah tersebut.",
 };
-
-export const STEPS = [
-  { n: "01", title: "Unggah atau ambil foto", text: "Pilih foto wajah dari perangkat, atau ambil langsung lewat kamera." },
-  { n: "02", title: "Klasifikasi otomatis", text: "Backend melakukan preprocessing, ekstraksi fitur HOG, dan klasifikasi model." },
-  { n: "03", title: "Lihat hasil", text: "Bentuk wajah, confidence score, dan rekomendasi gaya rambut tampil seketika." },
-];
 
 export const TIPS = [
   "Gunakan foto wajah tampak depan, menghadap kamera.",

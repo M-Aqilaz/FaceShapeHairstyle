@@ -13,23 +13,23 @@ export default function Result({ result, preview, onReset }: Props) {
   const pct = Math.round(result.confidence);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-3xl space-y-6 sm:space-y-8">
       <section>
         <SectionHead n="01" title="Hasil Klasifikasi" />
         <div className="glass overflow-hidden">
           <div className="grid gap-0 sm:grid-cols-[220px_1fr]">
-            <div className="bg-gradient-to-br from-sky-100 to-cyan-50 p-4">
-              <img src={preview} alt="Foto wajah yang dianalisis" className="h-56 w-full rounded-xl object-cover sm:h-full" />
+            <div className="bg-gradient-to-br from-sky-100 to-cyan-50 p-3 sm:p-4">
+              <img src={preview} alt="Foto wajah yang dianalisis" className="h-40 w-full rounded-xl object-cover sm:h-full sm:min-h-[220px]" />
             </div>
-            <div className="p-5 sm:p-6">
+            <div className="p-4 sm:p-6">
               <span className="mono">bentuk wajah terdeteksi</span>
-              <h2 className="mt-1 text-3xl font-bold text-grad">{info.label}</h2>
-              <p className="text-sm text-cyan-700">{info.blurb}</p>
+              <h2 className="mt-1 text-2xl font-bold text-grad sm:text-3xl">{info.label}</h2>
+              <p className="text-[13px] text-cyan-700 sm:text-sm">{info.blurb}</p>
 
-              <div className="mt-5">
-                <div className="flex items-baseline justify-between">
-                  <span className="mono">confidence score</span>
-                  <span className="font-mono text-2xl font-medium text-slate-900">{pct}%</span>
+              <div className="mt-4 sm:mt-5">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="mono shrink-0">confidence score</span>
+                  <span className="shrink-0 font-mono text-xl font-medium text-slate-900 sm:text-2xl">{pct}%</span>
                 </div>
                 <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-sky-100">
                   <div
@@ -78,20 +78,10 @@ export default function Result({ result, preview, onReset }: Props) {
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
           onClick={onReset}
-          className="flex-1 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-sky-500/25 transition hover:brightness-110"
+          className="min-h-12 flex-1 rounded-xl bg-gradient-to-r from-sky-700 to-cyan-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-sky-500/25 transition hover:brightness-110 sm:text-base"
         >
           Klasifikasi Ulang
         </button>
-        <a
-          href="#hasil-atas"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          className="flex-1 rounded-xl border border-sky-200 bg-white/70 px-6 py-3 text-center font-medium text-sky-800 transition hover:border-cyan-400"
-        >
-          Lihat Detail Skor
-        </a>
       </div>
     </div>
   );
@@ -100,15 +90,12 @@ export default function Result({ result, preview, onReset }: Props) {
 function RecCard({ rec, index }: { rec: Recommendation; index: number }) {
   return (
     <article className="glass glass-hover overflow-hidden">
-      <div className="grid h-28 place-items-center bg-gradient-to-br from-sky-100 via-cyan-50 to-blue-100">
+      <div className="grid h-24 place-items-center bg-gradient-to-br from-sky-100 via-cyan-50 to-blue-100 sm:h-28">
         {rec.image_url ? (
           <img src={rec.image_url} alt={`Referensi gaya ${rec.name}`} className="h-full w-full object-cover" loading="lazy" />
         ) : (
           /* ponytail: placeholder gradien sampai aset/jumlah gambar dari backend tersedia */
-          <div className="text-center">
-            <span className="mono">{String(index + 1).padStart(2, "0")}</span>
-            <p className="mt-1 px-4 text-sm font-medium text-sky-900/70">{rec.name}</p>
-          </div>
+          <span className="mono">{String(index + 1).padStart(2, "0")}</span>
         )}
       </div>
       <div className="p-4">

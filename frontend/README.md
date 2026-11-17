@@ -23,11 +23,20 @@ src/
   types.ts                FaceShape, PredictionResult, Recommendation
   lib/api.ts              predict() + fetchRecommendations() + normalisasi respons
   components/
-    Landing.tsx           hero, cara kerja, kategori bentuk wajah, panduan foto
-    Uploader.tsx          drag & drop, validasi file, preview, kamera (getUserMedia)
+    Landing.tsx           hero, kategori bentuk wajah, panduan foto
+    Uploader.tsx          KAMERA sebagai metode utama (auto-open dari CTA), unggah file sekunder
     Processing.tsx        indikator loading + tahap proses
     Result.tsx            bentuk wajah, confidence bar, keterangan, kartu rekomendasi
 ```
+
+Alur: tombol "Mulai Klasifikasi" langsung membuka kamera; unggah file tetap tersedia di bawahnya.
+Bila kamera tidak tersedia/ditolak, pengguna diarahkan ke unggah gambar.
+
+## Responsif
+
+Diuji tanpa overflow horizontal di 320, 390, 568x320 (landscape), 768, 1024, 1440.
+Modal kamera: full-screen portrait di HP (`h-[100dvh]`, video `flex-1`), 4:3 di desktop,
+dan kartu ringkas portrait otomatis bila tinggi viewport < 420px (landscape HP).
 
 ## Kontrak API yang diharapkan
 
