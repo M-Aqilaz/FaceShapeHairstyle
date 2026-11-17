@@ -9,19 +9,13 @@ import Result from "./components/Result";
 
 type Step = "landing" | "upload" | "processing" | "result";
 
-const STEP_LABEL: Record<Step, string> = {
-  landing: "Beranda",
-  upload: "Unggah Foto",
-  processing: "Memproses",
-  result: "Hasil",
-};
-
 export default function App() {
   const [step, setStep] = useState<Step>("landing");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [autoCamera, setAutoCamera] = useState(false); // buka kamera otomatis saat masuk dari landing
   const busy = useRef(false); // penjaga permintaan ganda (state async)
 
   // Satu object URL untuk seluruh alur upload → processing → result.
@@ -48,6 +42,7 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Klasifikasi gagal. Silakan coba lagi.");
+      setAutoCamera(false);
       setStep("upload");
     } finally {
       busy.current = false;
@@ -58,17 +53,20 @@ export default function App() {
     setFile(null);
     setResult(null);
     setError(null);
+    setAutoCamera(false);
     setStep("landing");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const cancel = useCallback(() => {
     busy.current = false;
+    setAutoCamera(false);
     setStep("upload");
   }, []);
 
   const goUpload = useCallback(() => {
     setError(null);
+    setAutoCamera(true);
     setStep("upload");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -80,27 +78,16 @@ export default function App() {
         <nav className="mx-auto flex max-w-5xl items-center justify-between gap-3 rounded-full border border-white/80 bg-white/70 px-4 py-2.5 shadow-lg shadow-sky-500/10 backdrop-blur-md">
           <button onClick={reset} className="flex items-center gap-2.5" aria-label="Kembali ke beranda">
             <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-sky-500 to-cyan-400 text-sm font-bold text-white">
-              F
+              H
             </span>
             <span className="font-semibold text-slate-900">{APP.name}</span>
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="mono hidden sm:inline">{STEP_LABEL[step]}</span>
-            <div className="flex gap-1" aria-hidden="true">
-              {(["landing", "upload", "processing", "result"] as Step[]).map((s) => (
-                <span
-                  key={s}
-                  className={`h-1.5 rounded-full transition-all ${
-                    s === step ? "w-6 bg-gradient-to-r from-sky-500 to-cyan-400" : "w-1.5 bg-sky-200"
-                  }`}
-                />
-              ))}
-            </div>
             {step !== "landing" && (
               <button
                 onClick={reset}
-                className="ml-1 rounded-full border border-sky-200 px-3 py-1.5 text-xs font-medium text-sky-800 transition hover:border-cyan-400"
+                className="rounded-full border border-sky-200 px-3 py-1.5 text-xs font-medium text-sky-800 transition hover:border-cyan-400"
               >
                 Beranda
               </button>
@@ -121,9 +108,11 @@ export default function App() {
 
         {step === "upload" && (
           <div>
-            <h1 className="mb-1 text-center text-2xl font-bold text-slate-900">Unggah Foto Wajah</h1>
-            <p className="mb-6 text-center text-sm text-slate-600">Satu foto tampak depan sudah cukup.</p>
-            <Uploader onSubmit={start} disabled={false} />
+            <h1 className="mb-1 text-center text-2xl font-bold text-slate-900">Ambil Foto Wajah</h1>
+            <p className="mb-6 text-center text-sm text-slate-600">
+              Gunakan kamera untuk mengambil foto wajah langsung, atau unggah gambar yang sudah ada.
+            </p>
+            <Uploader onSubmit={start} disabled={false} autoCamera={autoCamera} initialFile={file} />
           </div>
         )}
 

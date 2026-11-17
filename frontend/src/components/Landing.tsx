@@ -1,4 +1,4 @@
-import { APP, FACE_SHAPES, SHAPE_KEYS, STEPS, TIPS } from "../data";
+import { APP, FACE_SHAPES, SHAPE_KEYS, TIPS } from "../data";
 
 interface Props {
   onStart: () => void;
@@ -25,35 +25,14 @@ export default function Landing({ onStart }: Props) {
             >
               Mulai Klasifikasi
             </button>
-            <a
-              href="#cara-kerja"
-              className="rounded-full border border-sky-200 bg-white/70 px-7 py-3 font-medium text-sky-800 backdrop-blur transition hover:border-cyan-400"
-            >
-              Cara Kerja
-            </a>
           </div>
           <p className="mono mt-6 text-cyan-700/70">Tanpa instalasi · Foto tidak disimpan di browser</p>
         </div>
       </section>
 
-      {/* Cara kerja */}
-      <section id="cara-kerja" className="scroll-mt-24">
-        <SectionHead n="01" title="Cara Kerja" />
-        <div className="grid gap-4 sm:grid-cols-3">
-          {STEPS.map((s) => (
-            <div key={s.n} className="glass glass-hover p-5">
-              <span className="mono">{s.n}</span>
-              <h3 className="mt-2 font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{s.text}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 text-sm text-slate-600">{APP.about}</p>
-      </section>
-
       {/* Kategori bentuk wajah */}
       <section>
-        <SectionHead n="02" title="Kategori Bentuk Wajah" />
+        <SectionHead n="01" title="Kategori Bentuk Wajah" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHAPE_KEYS.map((key, i) => {
             const info = FACE_SHAPES[key];
@@ -83,7 +62,7 @@ export default function Landing({ onStart }: Props) {
 
       {/* Panduan foto */}
       <section>
-        <SectionHead n="03" title="Panduan Foto yang Baik" />
+        <SectionHead n="02" title="Panduan Foto yang Baik" />
         <div className="glass p-6">
           <ul className="grid gap-3 sm:grid-cols-2">
             {TIPS.map((t) => (

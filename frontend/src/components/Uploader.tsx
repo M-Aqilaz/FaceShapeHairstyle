@@ -4,18 +4,25 @@ import { ACCEPTED, MAX_BYTES, TIPS } from "../data";
 interface Props {
   onSubmit: (file: File) => void;
   disabled?: boolean;
+  autoCamera?: boolean;
+  initialFile?: File | null;
 }
 
 type Mode = "idle" | "camera";
 
-export default function Uploader({ onSubmit, disabled }: Props) {
-  const [file, setFile] = useState<File | null>(null);
+export default function Uploader({ onSubmit, disabled, autoCamera, initialFile }: Props) {
+  const [file, setFile] = useState<File | null>(initialFile ?? null);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [cameraTry, setCameraTry] = useState(0); // memaksa <video> reset saat mode kamera dibuka
   const mode: Mode = cameraTry > 0 ? "camera" : "idle";
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Kamera langsung terbuka saat masuk dari tombol "Mulai Klasifikasi".
+  useEffect(() => {
+    if (autoCamera) setCameraTry(1);
+  }, [autoCamera]);
 
   // Preview object URL selalu di-revoke saat diganti / unmount.
   useEffect(() => {
@@ -74,6 +81,25 @@ export default function Uploader({ onSubmit, disabled }: Props) {
 
         {!preview ? (
           <>
+            {/* Metode utama: kamera */}
+            <button
+              onClick={() => setCameraTry((n) => n + 1)}
+              className="mt-4 grid w-full place-items-center gap-1 rounded-xl border border-cyan-300 bg-gradient-to-br from-sky-600 to-cyan-500 px-6 py-9 text-center text-white shadow-lg shadow-sky-500/30 transition hover:brightness-110"
+            >
+              <svg viewBox="0 0 24 24" className="h-11 w-11" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" strokeLinejoin="round" />
+                <circle cx="12" cy="13" r="3.5" />
+              </svg>
+              <span className="mt-1 font-semibold">Ambil Foto Wajah</span>
+              <span className="text-xs text-white/80">Buka kamera perangkat · metode utama</span>
+            </button>
+
+            <div className="my-4 flex items-center gap-3">
+              <span className="h-px flex-1 bg-sky-200" />
+              <span className="mono">atau</span>
+              <span className="h-px flex-1 bg-sky-200" />
+            </div>
+
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -85,28 +111,19 @@ export default function Uploader({ onSubmit, disabled }: Props) {
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-              className={`mt-4 grid cursor-pointer place-items-center rounded-xl border-2 border-dashed px-6 py-12 text-center transition ${
+              className={`flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed px-4 py-4 text-center transition ${
                 dragging ? "border-cyan-500 bg-cyan-50/70" : "border-sky-300 bg-white/50 hover:border-cyan-400"
               }`}
             >
-              <svg viewBox="0 0 24 24" className="h-10 w-10 text-cyan-600" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-cyan-600" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M12 16V4m0 0 4 4m-4-4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" />
               </svg>
-              <p className="mt-3 font-medium text-slate-800">Tarik gambar ke sini atau klik untuk memilih</p>
-              <p className="mono mt-1">jpeg · png · maks 8 mb</p>
+              <span className="text-sm text-slate-700">
+                atau <span className="font-medium text-sky-800">unggah gambar</span> dari perangkat
+              </span>
             </div>
-
-            <button
-              onClick={() => setCameraTry((n) => n + 1)}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-white/70 px-4 py-3 text-sm font-medium text-sky-800 transition hover:border-cyan-400"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" strokeLinejoin="round" />
-                <circle cx="12" cy="13" r="3.5" />
-              </svg>
-              Ambil lewat kamera
-            </button>
+            <p className="mono mt-2 text-center">jpeg · png · maks 8 mb</p>
           </>
         ) : (
           <div className="mt-4">
@@ -250,15 +267,34 @@ function CameraModal({ onClose, onCapture }: { onClose: () => void; onCapture: (
             ✕
           </button>
         </div>
-        <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+        <div className="relative mt-3 overflow-hidden rounded-xl bg-slate-900">
           <video ref={videoRef} autoPlay playsInline muted className="mx-auto max-h-[60vh] w-full object-cover" />
+
+          {/* Panduan posisi kepala gaya verifikasi muka bank: area luar digelapkan, oval jadi "lubang" */}
+          {!err && (
+            <div className="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden="true">
+              <div className="relative aspect-[3/4] h-[64%] rounded-[50%] border-2 border-cyan-300 shadow-[0_0_0_9999px_rgba(2,6,23,0.64)]" />
+              <div className="absolute aspect-[3/4] h-[74%] animate-pulse rounded-[50%] border-2 border-dashed border-white/60" />
+            </div>
+          )}
+
+          {!err && (
+            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-2">
+              <span className="rounded-full bg-slate-900/70 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur">
+                Posisikan wajah di dalam oval
+              </span>
+            </div>
+          )}
         </div>
-        {err ? (
+        {!err && (
+          <p className="mt-2 text-center text-xs text-slate-500">
+            Wajah menghadap kamera, mata tidak tertutup, pencahayaan cukup.
+          </p>
+        )}
+        {err && (
           <p role="alert" className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
             {err}
           </p>
-        ) : (
-          <p className="mt-2 text-center text-xs text-slate-500">Hadapkan wajah ke kamera, pastikan pencahayaan cukup.</p>
         )}
         <div className="mt-3 flex gap-2">
           <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600">
