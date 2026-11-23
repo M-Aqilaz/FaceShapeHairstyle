@@ -80,8 +80,15 @@ def process_image(content: bytes) -> Tuple[np.ndarray, Tuple[int, int]]:
         image = image.convert("RGB")
     gray_image = image.convert("L")
 
+    # Center-crop ke bujur sangkar 1:1 agar proporsi wajah tidak gepeng saat di-resize ke (128, 128)
+    w, h = gray_image.size
+    min_dim = min(w, h)
+    left = (w - min_dim) // 2
+    top = (h - min_dim) // 2
+    cropped_image = gray_image.crop((left, top, left + min_dim, top + min_dim))
+
     # Resize to standardized target size for HOG extraction
-    resized_image = gray_image.resize(IMAGE_TARGET_SIZE, Image.Resampling.LANCZOS)
+    resized_image = cropped_image.resize(IMAGE_TARGET_SIZE, Image.Resampling.LANCZOS)
     img_array = np.array(resized_image, dtype=np.float32) / 255.0
 
     return img_array, orig_size

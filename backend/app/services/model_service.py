@@ -105,38 +105,18 @@ def predict_face_shape(
         classes = CLASSES
         probabilities = [1.0 if c == pred else 0.0 for c in classes]
 
-    prob_dict = {cls_name: float(prob) for cls_name, prob in zip(classes, probabilities)}
+    prob_dict = {str(cls_name): float(prob) for cls_name, prob in zip(classes, probabilities)}
 
-    # Geometric heuristic enhancement based on aspect ratio (Width / Height)
-    width, height = orig_dimensions
-    aspect_ratio = width / max(1, height)
+    best_shape = str(max(prob_dict, key=prob_dict.get))
+    raw_confidence = prob_dict[best_shape]
 
-    if aspect_ratio < 0.80:
-        # Taller face -> oblong bias
-        prob_dict["oblong"] = prob_dict.get("oblong", 0.0) + 0.35
-    elif aspect_ratio > 0.98:
-        # Wider face -> round / square bias
-        prob_dict["round"] = prob_dict.get("round", 0.0) + 0.25
-        prob_dict["square"] = prob_dict.get("square", 0.0) + 0.20
-    else:
-        # Proportional -> oval / heart bias
-        prob_dict["oval"] = prob_dict.get("oval", 0.0) + 0.25
-
-    # Normalize probabilities to sum to 1.0
-    total = sum(prob_dict.values())
-    if total > 0:
-        norm_probs = {k: v / total for k, v in prob_dict.items()}
-    else:
-        norm_probs = {k: 0.2 for k in CLASSES}
-
-    best_shape = str(max(norm_probs, key=norm_probs.get))
-    best_confidence = norm_probs[best_shape]
-
-    # Ensure realistic confidence between 0.70 and 0.98
-    confidence_score = float(np.clip(best_confidence, 0.72, 0.98))
+    # Skala confidence untuk 5-kelas: baseline random guessing adalah 0.20
+    # Map probability margin ke confidence score yang intuitif (0.65 s/d 0.95)
+    margin = max(0.0, raw_confidence - 0.20)
+    presentation_confidence = float(np.clip(0.68 + (margin * 0.70), 0.65, 0.95))
 
     return {
         "face_shape": best_shape,
-        "confidence": round(confidence_score, 4),
-        "probabilities": {str(k): round(float(v), 4) for k, v in norm_probs.items()},
+        "confidence": round(presentation_confidence, 4),
+        "probabilities": {str(k): round(float(v), 4) for k, v in prob_dict.items()},
     }

@@ -261,9 +261,17 @@ function CameraModal({
     const video = videoRef.current;
     if (!video || !video.videoWidth) return;
     const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d")!.drawImage(video, 0, 0);
+    // Potong bujur sangkar 1:1 di tengah (fokus pada kepala & hilangkan background samping)
+    const size = Math.min(video.videoWidth, video.videoHeight);
+    const sx = (video.videoWidth - size) / 2;
+    const sy = (video.videoHeight - size) / 2;
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+    // Efek cermin (mirroring) agar hasil jepretan sama persis dengan preview cermin selfie
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
     canvas.toBlob(
       (blob) => {
         if (blob) onCapture(new File([blob], `kamera-${Date.now()}.jpg`, { type: "image/jpeg" }));
@@ -298,17 +306,17 @@ function CameraModal({
           </div>
         ) : (
           <div className="relative mt-3 min-h-0 flex-1 overflow-hidden rounded-xl bg-slate-900 sm:aspect-[4/3] sm:flex-none [@media(max-height:420px)]:h-[calc(100dvh-140px)] [@media(max-height:420px)]:w-auto [@media(max-height:420px)]:flex-none [@media(max-height:420px)]:aspect-[3/4] [@media(max-height:420px)]:self-center">
-            <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover" />
+            {/* Kamera selfie dengan efek cermin (scale-x-[-1]) */}
+            <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover scale-x-[-1]" />
 
-            {/* Panduan posisi kepala gaya verifikasi muka bank: area luar digelapkan, oval jadi "lubang" */}
-            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-              <div className="absolute inset-0 m-auto aspect-[3/4] h-[60%] rounded-[50%] border-2 border-cyan-300 shadow-[0_0_0_9999px_rgba(2,6,23,0.64)]" />
-              <div className="absolute inset-0 m-auto aspect-[3/4] h-[70%] animate-pulse rounded-[50%] border border-dashed border-white/40" />
+            {/* Panduan posisi kepala yang lega, tidak gelap pekat dan tidak bikin sesak */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+              <div className="relative aspect-[3/4] h-[78%] max-w-[280px] rounded-[50%] border-2 border-cyan-400/90 bg-cyan-500/5 shadow-[0_0_24px_rgba(34,211,238,0.3)] ring-1 ring-white/40" />
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-2 [@media(max-height:420px)]:hidden">
-              <span className="rounded-full bg-slate-900/70 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur">
-                Posisikan wajah di dalam oval
+            <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center [@media(max-height:420px)]:hidden">
+              <span className="rounded-full bg-slate-900/75 px-3 py-1 text-xs font-medium text-white/95 shadow-md backdrop-blur">
+                Arahkan wajah menghadap kamera
               </span>
             </div>
           </div>
