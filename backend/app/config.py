@@ -6,7 +6,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
-MODEL_FILE_PATH = MODELS_DIR / "face_shape_svm.pkl"
+TRAINED_MODEL_FILE_PATH = MODELS_DIR / "trained_face_shape_svm.pkl"
+MODEL_FILE_PATH = (
+    TRAINED_MODEL_FILE_PATH
+    if TRAINED_MODEL_FILE_PATH.exists()
+    else MODELS_DIR / "face_shape_svm.pkl"
+)
 
 # Upload and Validation Rules
 MAX_FILE_SIZE = 8 * 1024 * 1024  # 8 MB

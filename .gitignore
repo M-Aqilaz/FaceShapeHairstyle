@@ -24,7 +24,9 @@ wheels/
 *.egg
 .pytest_cache/
 
-# Node
+# Model artifacts
+backend/models/trained_face_shape_svm.pkl
+*.lfs*
 node_modules/
 .npm
 

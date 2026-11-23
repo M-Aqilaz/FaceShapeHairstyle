@@ -129,7 +129,7 @@ def predict_face_shape(
     else:
         norm_probs = {k: 0.2 for k in CLASSES}
 
-    best_shape = max(norm_probs, key=norm_probs.get)
+    best_shape = str(max(norm_probs, key=norm_probs.get))
     best_confidence = norm_probs[best_shape]
 
     # Ensure realistic confidence between 0.70 and 0.98
@@ -138,5 +138,5 @@ def predict_face_shape(
     return {
         "face_shape": best_shape,
         "confidence": round(confidence_score, 4),
-        "probabilities": {k: round(v, 4) for k, v in norm_probs.items()},
+        "probabilities": {str(k): round(float(v), 4) for k, v in norm_probs.items()},
     }

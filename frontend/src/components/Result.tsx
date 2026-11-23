@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FACE_SHAPES } from "../data";
 import type { PredictionResult, Recommendation } from "../types";
 import { SectionHead } from "./Landing";
@@ -88,13 +89,21 @@ export default function Result({ result, preview, onReset }: Props) {
 }
 
 function RecCard({ rec, index }: { rec: Recommendation; index: number }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <article className="glass glass-hover overflow-hidden">
       <div className="grid h-24 place-items-center bg-gradient-to-br from-sky-100 via-cyan-50 to-blue-100 sm:h-28">
-        {rec.image_url ? (
-          <img src={rec.image_url} alt={`Referensi gaya ${rec.name}`} className="h-full w-full object-cover" loading="lazy" />
+        {rec.image_url && !imgError ? (
+          <img
+            src={rec.image_url}
+            alt={`Referensi gaya ${rec.name}`}
+            className="h-full w-full object-cover"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
         ) : (
-          /* ponytail: placeholder gradien sampai aset/jumlah gambar dari backend tersedia */
+          /* placeholder gradien sampai file gambar gaya rambut tersedia */
           <span className="mono">{String(index + 1).padStart(2, "0")}</span>
         )}
       </div>
