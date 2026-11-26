@@ -309,21 +309,21 @@ function CameraModal({
             {/* Kamera selfie dengan efek cermin (scale-x-[-1]) */}
             <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover scale-x-[-1]" />
 
-            {/* Panduan posisi kepala yang lega, tidak gelap pekat dan tidak bikin sesak */}
+            {/* Panduan posisi kepala berjarak ideal untuk menghindari distorsi fisheye */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
-              <div className="relative aspect-[3/4] h-[78%] max-w-[280px] rounded-[50%] border-2 border-cyan-400/90 bg-cyan-500/5 shadow-[0_0_24px_rgba(34,211,238,0.3)] ring-1 ring-white/40" />
+              <div className="relative aspect-[3/4] h-[52%] max-w-[190px] rounded-[50%] border-2 border-cyan-400/90 bg-cyan-500/5 shadow-[0_0_24px_rgba(34,211,238,0.3)] ring-1 ring-white/40" />
             </div>
 
             <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center [@media(max-height:420px)]:hidden">
-              <span className="rounded-full bg-slate-900/75 px-3 py-1 text-xs font-medium text-white/95 shadow-md backdrop-blur">
-                Arahkan wajah menghadap kamera
+              <span className="rounded-full bg-slate-900/80 px-3 py-1 text-xs font-medium text-white/95 shadow-md backdrop-blur">
+                Posisikan wajah di dalam oval (Jarak ~60–80 cm)
               </span>
             </div>
           </div>
         )}
         {!err && (
           <p className="mt-2 shrink-0 text-center text-[11px] leading-tight text-slate-500 sm:text-xs [@media(max-height:420px)]:hidden">
-            Wajah menghadap kamera, pencahayaan cukup.
+            Jaga jarak ~60–80 cm dari layar agar proporsi wajah tidak cembung.
           </p>
         )}
         {err && (
