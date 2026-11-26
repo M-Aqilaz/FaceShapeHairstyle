@@ -78,6 +78,18 @@ export const FACE_SHAPES: Record<FaceShape, FaceShapeInfo> = {
       { name: "Fringe", description: "Poni jatuh menutup dahi.", reason: "Memotong panjang visual wajah." },
     ],
   },
+  diamond: {
+    label: "Diamond",
+    blurb: "Tulang pipi tegas & bersudut",
+    description:
+      "Bentuk wajah diamond memiliki tulang pipi lebar dan menonjol, dengan dahi sempit dan dagu runcing bersudut. Gaya rambut bertekstur, poni, atau belahan samping menambah kepenuhan pada dahi dan melembutkan sudut rahang.",
+    traits: ["Tulang pipi terlebar", "Dahi dan dagu meruncing sempit", "Garis rahang bersudut tegas"],
+    fallback: [
+      { name: "Textured Crop", description: "Poni bertekstur dengan sisi proporsional.", reason: "Melembutkan sudut tajam tulang pipi dan memberi dimensi pada dahi." },
+      { name: "Side Fringe", description: "Poni samping yang jatuh alami di atas dahi.", reason: "Menyeimbangkan lebar tulang pipi dan menyamarkan dahi sempit." },
+      { name: "Messy Quiff", description: "Volume medium di bagian atas.", reason: "Memberikan proporsi seimbang antara dahi dan dagu lancip." },
+    ],
+  },
 };
 
 export const SHAPE_KEYS = Object.keys(FACE_SHAPES) as FaceShape[];

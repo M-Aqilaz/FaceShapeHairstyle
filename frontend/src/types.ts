@@ -1,4 +1,4 @@
-export type FaceShape = "oval" | "round" | "square" | "heart" | "oblong";
+export type FaceShape = "oval" | "round" | "square" | "heart" | "oblong" | "diamond";
 
 export interface Recommendation {
   name: string;

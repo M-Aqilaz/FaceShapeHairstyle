@@ -172,6 +172,40 @@ RECOMMENDATIONS_DATA: Dict[str, Dict[str, Any]] = {
             },
         ],
     },
+    "diamond": {
+        "label": "Diamond",
+        "blurb": "Tulang pipi tegas & bersudut",
+        "description": (
+            "Bentuk wajah diamond memiliki tulang pipi lebar dan menonjol, dengan dahi sempit "
+            "dan dagu runcing bersudut. Gaya rambut bertekstur, poni, atau belahan samping "
+            "menambah kepenuhan pada dahi dan melembutkan sudut rahang."
+        ),
+        "traits": [
+            "Tulang pipi terlebar dibanding dahi dan rahang",
+            "Dahi dan dagu meruncing sempit",
+            "Garis rahang bersudut tegas",
+        ],
+        "recommendations": [
+            {
+                "name": "Textured Crop",
+                "description": "Poni bertekstur dengan sisi proporsional tidak terlalu tipis.",
+                "reason": "Melembutkan sudut tajam tulang pipi dan menambah dimensi pada dahi.",
+                "image_url": "/images/hairstyles/french_crop.jpg",
+            },
+            {
+                "name": "Side Fringe / Side Swept",
+                "description": "Poni samping yang jatuh alami di atas dahi.",
+                "reason": "Menyeimbangkan lebar tulang pipi dan menyamarkan dahi sempit.",
+                "image_url": "/images/hairstyles/side_part.jpg",
+            },
+            {
+                "name": "Messy Quiff",
+                "description": "Volume medium di bagian atas dan samping yang tidak terlalu tipis.",
+                "reason": "Memberikan proporsi seimbang antara dahi dan dagu lancip.",
+                "image_url": "/images/hairstyles/quiff.jpg",
+            },
+        ],
+    },
 }
 
 # Synonyms for normalization
@@ -188,6 +222,8 @@ SHAPE_SYNONYMS = {
     "long": "oblong",
     "panjang": "oblong",
     "rectangle": "oblong",
+    "diamond": "diamond",
+    "wajik": "diamond",
 }
 
 
