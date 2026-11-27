@@ -64,6 +64,16 @@ python -m pytest backend/tests/test_api.py -v
 
 ---
 
+## Dataset
+
+Dataset training (ZIP, 6 kelas) disimpan di Google Drive dan tidak disertakan di repository:
+
+[Unduh dataset dari Google Drive](https://drive.google.com/drive/folders/1WR0Q5FObxYFLENd2W177GlChr94WNCqN?usp=sharing)
+
+Unduh lalu ekstrak dataset ke folder `FaceShapeDataset/` di root repository. Folder dataset dan file ZIP diabaikan oleh Git.
+
+---
+
 ## Kontrak API Backend
 
 | Method | Endpoint | Deskripsi | Input | Output Utama |
