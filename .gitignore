@@ -24,8 +24,10 @@ wheels/
 *.egg
 .pytest_cache/
 
-# Model artifacts
+# Model artifacts and datasets
 backend/models/trained_face_shape_svm.pkl
+FaceShapeDataset/
+*.zip
 *.lfs*
 node_modules/
 .npm
