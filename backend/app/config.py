@@ -25,4 +25,4 @@ HOG_PIXELS_PER_CELL = (8, 8)
 HOG_CELLS_PER_BLOCK = (2, 2)
 
 # Face shape classes
-CLASSES = ["heart", "oblong", "oval", "round", "square"]
+CLASSES = ["diamond", "heart", "oblong", "oval", "round", "square"]

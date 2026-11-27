@@ -11,66 +11,66 @@ from backend.app.config import (
     ALLOWED_MIME_TYPES,
     IMAGE_TARGET_SIZE,
     MAX_FILE_SIZE,
+    MODELS_DIR,
 )
 
 logger = logging.getLogger("face_shape_api.image_service")
 
-# Inisialisasi MediaPipe Face Detection
-_FACE_DETECTOR = None
+# Inisialisasi MediaPipe FaceLandmarker (Tasks API)
+_FACE_LANDMARKER = None
+_LANDMARKER_TASK_PATH = MODELS_DIR / "face_landmarker.task"
 try:
     import mediapipe as mp
-    mp_face = mp.solutions.face_detection
-    _FACE_DETECTOR = mp_face.FaceDetection(model_selection=1, min_detection_confidence=0.5)
-    logger.info("MediaPipe Face Detection berhasil diinisialisasi.")
+    from mediapipe.tasks import python as mp_python
+    from mediapipe.tasks.python import vision as mp_vision
+
+    if _LANDMARKER_TASK_PATH.exists():
+        _base_opts = mp_python.BaseOptions(model_asset_path=str(_LANDMARKER_TASK_PATH))
+        _opts = mp_vision.FaceLandmarkerOptions(
+            base_options=_base_opts,
+            num_faces=1,
+            min_face_detection_confidence=0.5,
+        )
+        _FACE_LANDMARKER = mp_vision.FaceLandmarker.create_from_options(_opts)
+        logger.info("MediaPipe FaceLandmarker (478 landmark) berhasil diinisialisasi.")
+    else:
+        logger.warning(f"Model FaceLandmarker tidak ditemukan di {_LANDMARKER_TASK_PATH}")
 except Exception as e:
-    logger.warning(f"MediaPipe Face Detection tidak aktif / belum terpasang: {e}")
+    logger.warning(f"MediaPipe FaceLandmarker tidak aktif / belum terpasang: {e}")
 
 
-def crop_face_with_mediapipe(image: Image.Image) -> Image.Image:
+def crop_face_with_mediapipe(image: Image.Image, padding: float = 0.20) -> Image.Image:
     """
-    Mendeteksi area wajah menggunakan MediaPipe dan melakukan auto-crop bujur sangkar 1:1
-    dengan margin ~25% agar garis rambut dan rahang tetap utuh.
+    Mendeteksi area wajah menggunakan 478 landmark MediaPipe FaceLandmarker dan melakukan
+    auto-crop bujur sangkar 1:1 dengan margin ~20% agar dahi, tulang pipi, dan dagu tetap utuh.
     Jika tidak ada wajah terdeteksi, otomatis fallback ke center-crop 1:1.
     """
     w, h = image.size
-    global _FACE_DETECTOR
-    if _FACE_DETECTOR is not None:
+    global _FACE_LANDMARKER
+    if _FACE_LANDMARKER is not None:
         try:
             rgb_arr = np.array(image.convert("RGB"))
-            results = _FACE_DETECTOR.process(rgb_arr)
-            if results and results.detections:
-                # Ambil deteksi wajah dengan ukuran bounding box terbesar
-                best = max(
-                    results.detections,
-                    key=lambda d: d.location_data.relative_bounding_box.width
-                    * d.location_data.relative_bounding_box.height,
-                )
-                bbox = best.location_data.relative_bounding_box
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_arr)
+            results = _FACE_LANDMARKER.detect(mp_image)
+            if results and results.face_landmarks:
+                landmarks = results.face_landmarks[0]
+                x_coords = [lm.x * w for lm in landmarks]
+                y_coords = [lm.y * h for lm in landmarks]
 
-                # Konversi relatif ke koordinat piksel
-                bx = int(bbox.xmin * w)
-                by = int(bbox.ymin * h)
-                bw = int(bbox.width * w)
-                bh = int(bbox.height * h)
+                xmin, xmax = min(x_coords), max(x_coords)
+                ymin, ymax = min(y_coords), max(y_coords)
 
-                # Margin 25% agar mencakup hairline dan kontur rahang bawah
-                pad_x = int(bw * 0.25)
-                pad_y = int(bh * 0.25)
+                bw = xmax - xmin
+                bh = ymax - ymin
 
-                x1 = max(0, bx - pad_x)
-                y1 = max(0, by - pad_y)
-                x2 = min(w, bx + bw + pad_x)
-                y2 = min(h, by + bh + pad_y)
+                cx = xmin + bw / 2.0
+                cy = ymin + bh / 2.0
+                sq_size = max(bw, bh) * (1.0 + padding * 2)
 
-                # Buat potongan bujur sangkar 1:1 berpusat pada wajah
-                cx = (x1 + x2) // 2
-                cy = (y1 + y2) // 2
-                sq_size = max(x2 - x1, y2 - y1)
-
-                crop_x1 = max(0, cx - sq_size // 2)
-                crop_y1 = max(0, cy - sq_size // 2)
-                crop_x2 = min(w, crop_x1 + sq_size)
-                crop_y2 = min(h, crop_y1 + sq_size)
+                crop_x1 = max(0, int(cx - sq_size / 2.0))
+                crop_y1 = max(0, int(cy - sq_size / 2.0))
+                crop_x2 = min(w, int(cx + sq_size / 2.0))
+                crop_y2 = min(h, int(cy + sq_size / 2.0))
 
                 if crop_x2 > crop_x1 and crop_y2 > crop_y1:
                     return image.crop((crop_x1, crop_y1, crop_x2, crop_y2))
