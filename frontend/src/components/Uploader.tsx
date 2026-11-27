@@ -316,14 +316,14 @@ function CameraModal({
 
             <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center [@media(max-height:420px)]:hidden">
               <span className="rounded-full bg-slate-900/80 px-3 py-1 text-xs font-medium text-white/95 shadow-md backdrop-blur">
-                Posisikan wajah di dalam oval (Jarak ~60–80 cm)
+                Wajah di dalam oval · Cahaya dari depan
               </span>
             </div>
           </div>
         )}
         {!err && (
           <p className="mt-2 shrink-0 text-center text-[11px] leading-tight text-slate-500 sm:text-xs [@media(max-height:420px)]:hidden">
-            Jaga jarak ~60–80 cm dari layar agar proporsi wajah tidak cembung.
+            💡 Jaga jarak ~60–80 cm & hindari membelakangi lampu/jendela (backlight).
           </p>
         )}
         {err && (

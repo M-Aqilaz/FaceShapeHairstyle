@@ -154,6 +154,19 @@ def process_image(content: bytes) -> Tuple[np.ndarray, Tuple[int, int]]:
 
     # 3. Resize to standardized target size for HOG extraction (128x128)
     resized_image = gray_image.resize(IMAGE_TARGET_SIZE, Image.Resampling.LANCZOS)
-    img_array = np.array(resized_image, dtype=np.float32) / 255.0
+    gray_arr = np.array(resized_image, dtype=np.uint8)
+
+    # 4. Adaptive Contrast Enhancement (CLAHE)
+    # Menyeimbangkan kontras lokal untuk mengatasi foto gelap / backlight,
+    # sehingga gradien tepi tulang pipi, dahi, dan garis rahang tetap terdefinisi jelas bagi HOG.
+    try:
+        import cv2
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        enhanced_arr = clahe.apply(gray_arr)
+    except Exception as exc:
+        logger.warning(f"Gagal menerapkan CLAHE: {exc}. Menggunakan grayscale standar.")
+        enhanced_arr = gray_arr
+
+    img_array = enhanced_arr.astype(np.float32) / 255.0
 
     return img_array, orig_size

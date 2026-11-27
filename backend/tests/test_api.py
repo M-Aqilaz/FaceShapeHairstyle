@@ -24,7 +24,7 @@ def test_health():
 
 
 def test_all_recommendations():
-    shapes = ["oval", "round", "square", "heart", "oblong"]
+    shapes = ["oval", "round", "square", "heart", "oblong", "diamond"]
     for shape in shapes:
         res = client.get(f"/api/recommendations/{shape}")
         assert res.status_code == 200
@@ -61,7 +61,7 @@ def test_predict_pipeline():
     assert res.status_code == 200
     data = res.json()
     assert "face_shape" in data
-    assert data["face_shape"] in ["oval", "round", "square", "heart", "oblong"]
+    assert data["face_shape"] in ["oval", "round", "square", "heart", "oblong", "diamond"]
     assert 0.0 <= data["confidence"] <= 1.0
     assert len(data["recommendations"]) >= 1
     assert "label" in data

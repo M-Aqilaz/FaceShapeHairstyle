@@ -8,10 +8,10 @@ export const APP = {
 };
 
 export const TIPS = [
-  "Gunakan foto wajah tampak depan, menghadap kamera.",
-  "Pastikan pencahayaan cukup dan wajah tidak tertutup rambut atau tangan.",
-  "Hindari aksesori yang menutupi dahi, mata, atau rahang.",
-  "Format JPEG atau PNG, ukuran maksimal 8 MB.",
+  "Gunakan foto wajah tampak depan, menghadap kamera sejajar mata.",
+  "Pastikan cahaya datang dari DEPAN wajah (hindari membelakangi jendela/lampu).",
+  "Jaga jarak ~60–80 cm dari kamera agar proporsi wajah tidak mengalami distorsi cembung.",
+  "Pastikan dahi, tulang pipi, dan garis rahang terlihat jelas.",
 ];
 
 export const MAX_BYTES = 8 * 1024 * 1024;
