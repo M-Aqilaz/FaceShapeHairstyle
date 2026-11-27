@@ -74,6 +74,23 @@ Unduh lalu ekstrak dataset ke folder `FaceShapeDataset/` di root repository. Fol
 
 ---
 
+## Referensi Jurnal
+
+Jurnal terkait klasifikasi bentuk wajah, dikelompokkan berdasarkan kategori yang diteliti:
+
+### Laki-Laki
+
+1. [https://doi.org/10.37012/jtik.v9i1.1622](https://doi.org/10.37012/jtik.v9i1.1622)
+2. [https://doi.org/10.33364/algoritma/v.21-2.2134](https://doi.org/10.33364/algoritma/v.21-2.2134)
+3. [https://doi.org/10.62951/repeater.v2i3.139](https://doi.org/10.62951/repeater.v2i3.139)
+
+### Perempuan
+
+1. [https://doi.org/10.33998/processor.2026.21.2.2930](https://doi.org/10.33998/processor.2026.21.2.2930)
+2. [https://doi.org/10.30829/algoritma.v9i2.26763](https://doi.org/10.30829/algoritma.v9i2.26763)
+
+---
+
 ## Kontrak API Backend
 
 | Method | Endpoint | Deskripsi | Input | Output Utama |
