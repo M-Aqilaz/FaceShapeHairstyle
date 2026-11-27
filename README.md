@@ -15,7 +15,7 @@ FaceShapeHairstyle/
 │   │   │   ├── image_service.py          # Validasi & preprocessing gambar
 │   │   │   ├── feature_service.py        # Ekstraksi fitur HOG (skimage)
 │   │   │   ├── model_service.py          # Klasifikasi SVM & kalkulasi confidence
-│   │   │   └── recommendation_service.py # Mapping 5 kategori bentuk wajah & rekomendasi
+│   │   │   └── recommendation_service.py # Rekomendasi untuk 6 bentuk wajah, pria & wanita
 │   │   ├── config.py         # Konfigurasi sistem & batas ukuran file
 │   │   └── main.py           # Inisialisasi FastAPI & CORS middleware
 │   ├── models/               # Model artifact (.pkl)
@@ -76,18 +76,21 @@ Unduh lalu ekstrak dataset ke folder `FaceShapeDataset/` di root repository. Fol
 
 ## Referensi Jurnal
 
-Jurnal terkait klasifikasi bentuk wajah, dikelompokkan berdasarkan kategori yang diteliti:
+Referensi dikelompokkan berdasarkan kontribusinya terhadap proyek, bukan berdasarkan gender.
 
-### Laki-Laki
+### Digunakan langsung sebagai rujukan rekomendasi
 
-1. [https://doi.org/10.37012/jtik.v9i1.1622](https://doi.org/10.37012/jtik.v9i1.1622)
-2. [https://doi.org/10.33364/algoritma/v.21-2.2134](https://doi.org/10.33364/algoritma/v.21-2.2134)
-3. [https://doi.org/10.62951/repeater.v2i3.139](https://doi.org/10.62951/repeater.v2i3.139)
+1. Widodo, Y. B., Sibuea, S., & Rivaldi, A. (2023). *Rancang Bangun Aplikasi Sistem Pakar untuk Pemilihan Model Gaya Rambut Pria Menggunakan Metode Forward Chaining*. [DOI](https://doi.org/10.37012/jtik.v9i1.1622)  
+   Daftar gaya seperti Undercut, French Crop, dan Slick Back menjadi rujukan awal katalog rekomendasi pria. Metode forward chaining dari jurnal ini tidak digunakan; proyek memakai HOG + SVM.
 
-### Perempuan
+### Referensi pendukung
 
-1. [https://doi.org/10.33998/processor.2026.21.2.2930](https://doi.org/10.33998/processor.2026.21.2.2930)
-2. [https://doi.org/10.30829/algoritma.v9i2.26763](https://doi.org/10.30829/algoritma.v9i2.26763)
+Referensi berikut relevan untuk topik klasifikasi wajah atau rekomendasi rambut, tetapi metode penelitiannya belum diterapkan langsung di proyek.
+
+1. Azzahra, M. S., Maesaroh, S. S., & Guntara, R. G. (2024). *Penggunaan Convolutional Neural Network dan Transfer Learning untuk Rekomendasi Gaya Rambut Pria*. [DOI](https://doi.org/10.33364/algoritma/v.21-2.2134) — menggunakan CNN dan transfer learning.
+2. Putra, M. Y. (2024). *Rancang Bangun Deteksi Bentuk Wajah Untuk Menentukan Gaya Rambut Menggunakan Algoritma CNN*. [DOI](https://doi.org/10.62951/repeater.v2i3.139) — menggunakan CNN.
+3. Apridiansyah, Y., Apriansy, R. E., & Wijaya, A. (2026). *Morphological Face Analysis for Hairstyle Recommendations Based on Face Shape Using MediaPipe Face Mesh*. [DOI](https://doi.org/10.33998/processor.2026.21.2.2930) — menggunakan landmark MediaPipe.
+4. Putra, D. M., Santoso, A. K., Fadli, A., Fatoni, F. A., Novanto, A. H., & Nurhasan, F. (2025). *Sistem Klasifikasi Bentuk Wajah Menggunakan EfficientNet-B4 untuk Rekomendasi Gaya Rambut Berbasis Web*. [DOI](https://doi.org/10.30829/algoritma.v9i2.26763) — menggunakan EfficientNet-B4.
 
 ---
 
@@ -98,4 +101,6 @@ Jurnal terkait klasifikasi bentuk wajah, dikelompokkan berdasarkan kategori yang
 | `GET` | `/api/health` | Cek status server & kesiapan model | - | `{"status": "ok", "model_ready": true}` |
 | `POST` | `/api/upload` | Validasi format file & ukuran | `multipart/form-data` (`file`) | Metadata file & status validasi |
 | `POST` | `/api/analysis/predict` | Pipeline lengkap: upload, ekstraksi HOG, klasifikasi model, rekomendasi | `multipart/form-data` (`file`) | `face_shape`, `confidence`, `recommendations` |
-| `GET` | `/api/recommendations/{shape}` | Katalog rekomendasi gaya rambut | Path parameter: `oval`, `round`, `square`, `heart`, `oblong` | Detail bentuk wajah, ciri-ciri, daftar gaya rambut |
+| `GET` | `/api/recommendations/{shape}` | Katalog rekomendasi gaya rambut | Path parameter: `oval`, `round`, `square`, `heart`, `oblong`, `diamond` | Detail bentuk wajah, ciri-ciri, rekomendasi pria dan wanita |
+
+Setiap rekomendasi diberi label **Pria** atau **Wanita** agar kategorinya terlihat pada hasil aplikasi.
