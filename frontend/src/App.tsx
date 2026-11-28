@@ -72,22 +72,43 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       {/* Nav */}
-      <header className="sticky top-0 z-40 px-4 pt-4">
-        <nav className="mx-auto flex max-w-5xl items-center justify-between gap-3 rounded-full border border-white/80 bg-white/70 px-4 py-2.5 shadow-lg shadow-sky-500/10 backdrop-blur-md">
-          <button onClick={reset} className="flex items-center gap-2.5" aria-label="Kembali ke beranda">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-sky-500 to-cyan-400 text-sm font-bold text-white">
+      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <button onClick={reset} className="flex items-center gap-2.5 text-left" aria-label="Kembali ke beranda">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-slate-900 text-sm font-bold text-white">
               H
             </span>
-            <span className="font-semibold text-slate-900">{APP.name}</span>
+            <span className="text-base font-bold tracking-tight text-slate-900">{APP.name}</span>
           </button>
 
+          {step === "landing" && (
+            <div className="hidden items-center gap-7 text-xs font-medium uppercase tracking-wider text-slate-500 md:flex">
+              <a href="#beranda" className="transition hover:text-slate-900">
+                Beranda
+              </a>
+              <a href="#kategori" className="transition hover:text-slate-900">
+                Kategori Wajah
+              </a>
+              <a href="#panduan" className="transition hover:text-slate-900">
+                Panduan Foto
+              </a>
+            </div>
+          )}
+
           <div className="flex items-center gap-2">
-            {step !== "landing" && (
+            {step === "landing" ? (
+              <button
+                onClick={goUpload}
+                className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-slate-800"
+              >
+                Mulai Klasifikasi
+              </button>
+            ) : (
               <button
                 onClick={reset}
-                className="rounded-full border border-sky-200 px-3 py-1.5 text-xs font-medium text-sky-800 transition hover:border-cyan-400"
+                className="rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Beranda
               </button>
@@ -96,7 +117,7 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-16 pt-5 sm:pb-20 sm:pt-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-10">
         {error && step === "upload" && (
           <div role="alert" className="mx-auto mb-5 max-w-xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             <strong className="font-semibold">Klasifikasi gagal. </strong>
@@ -107,13 +128,7 @@ export default function App() {
         {step === "landing" && <Landing onStart={goUpload} />}
 
         {step === "upload" && (
-          <div>
-            <h1 className="mb-1 text-center text-xl font-bold text-slate-900 sm:text-2xl">Ambil Foto Wajah</h1>
-            <p className="mb-5 text-center text-[13px] text-slate-600 sm:text-sm">
-              Ambil foto langsung lewat kamera, atau unggah gambar dari perangkat.
-            </p>
-            <Uploader onSubmit={start} disabled={false} autoCamera={autoCamera} initialFile={file} />
-          </div>
+          <Uploader onSubmit={start} onBack={reset} disabled={false} autoCamera={autoCamera} initialFile={file} />
         )}
 
         {step === "processing" && preview && (
@@ -125,10 +140,19 @@ export default function App() {
         {step === "result" && result && preview && <Result result={result} preview={preview} onReset={reset} />}
       </main>
 
-      <footer className="hidden border-t border-sky-100 bg-white/50 px-4 py-6 backdrop-blur sm:block">
-        <p className="mx-auto max-w-5xl text-center text-xs text-slate-500">
-          {APP.name} · Frontend React + TypeScript · Klasifikasi bentuk wajah (oval, round, square, heart, oblong) dengan HOG + machine learning.
-        </p>
+      <footer className="border-t border-slate-200/80 bg-white/80 px-4 py-8 backdrop-blur sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold tracking-tight text-slate-900">{APP.name}</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-sky-700">HOG + ML</span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">
+              Klasifikasi bentuk wajah (oval, round, square, heart, oblong, diamond) &amp; rekomendasi gaya rambut.
+            </p>
+          </div>
+          <p className="text-xs text-slate-400">Tanpa instalasi · Foto tidak disimpan</p>
+        </div>
       </footer>
     </div>
   );
